@@ -7,7 +7,7 @@ import { ReactionButtons } from "./ReactionButtons";
 import { TimeAgo } from "./TimeAgo";
 import { Spinner } from "../../components/Spinner";
 
-function PostExcerpt({ post }) {
+let PostExcerpt = ({ post }) => {
   return (
     <article className="post-excerpt" key={post.id}>
       <h3>{post.title}</h3>
@@ -22,7 +22,9 @@ function PostExcerpt({ post }) {
       </Link>
     </article>
   );
-}
+};
+
+PostExcerpt = React.memo(PostExcerpt);
 
 function PostsList() {
   const dispatch = useDispatch();
