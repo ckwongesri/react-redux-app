@@ -2,10 +2,12 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { PostAuthor } from "../users/PostAuthor";
+import { selectAllPosts } from "./postsSlice";
+import { ReactionButtons } from "./ReactionButtons";
 import { TimeAgo } from "./TimeAgo";
 
 function PostsList() {
-  const posts = useSelector((state) => state.posts);
+  const posts = useSelector(selectAllPosts);
 
   const orderedPosts = posts
     .slice()
@@ -19,6 +21,7 @@ function PostsList() {
         <TimeAgo timestamp={post.date} />
       </div>
       <p className="post-content">{post.content.substring(0, 100)}</p>
+      <ReactionButtons post={post} />
       <Link to={`/posts/${post.id}`} className="button muted-button">
         Read More
       </Link>
