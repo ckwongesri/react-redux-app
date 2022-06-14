@@ -1,18 +1,16 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addNewPost } from "./postsSlice";
 import { selectAllUsers } from "@features/users/usersSlice";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useAddNewPostMutation } from "../api/apiSlice";
 
 function AddPostForm() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  const [addNewPost, { isLoading }] = useAddNewPostMutation();
 
-  const canSave =
-    [title, content, userId].every(Boolean) && addRequestStatus === "idle";
+  const canSave = [title, content, userId].every(Boolean) && !isLoading;
 
-  const dispatch = useDispatch();
   const users = useSelector(selectAllUsers);
 
   function onTitleChanged(event) {
@@ -30,15 +28,12 @@ function AddPostForm() {
   async function onSavePostClicked() {
     if (canSave) {
       try {
-        setAddRequestStatus("pending");
-        await dispatch(addNewPost({ title, content, user: userId })).unwrap();
+        await addNewPost({ title, content, user: userId }).unwrap();
         setTitle("");
         setContent("");
         setUserId("");
       } catch (err) {
         console.error("Failed to save the post: ", err);
-      } finally {
-        setAddRequestStatus("idle");
       }
     }
   }
