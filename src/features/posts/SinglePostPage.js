@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { PostAuthor } from "../users/PostAuthor";
+import { TimeAgo } from "./TimeAgo";
 
 function SinglePostPage({ match }) {
   const { postId } = match.params;
@@ -21,7 +22,10 @@ function SinglePostPage({ match }) {
     <section>
       <article className="post">
         <h2>{post.title}</h2>
-        <PostAuthor userId={post.user} />
+        <div>
+          <PostAuthor userId={post.user} />
+          <TimeAgo timestamp={post.date} />
+        </div>
         <p className="post-content">{post.content}</p>
       </article>
     </section>
