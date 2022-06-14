@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import { Navbar } from './app/Navbar';
-import { PostsList } from './features/posts/PostsList';
+import { PostsList } from '@features/posts/PostsList';
 
 function App() {
   return (
