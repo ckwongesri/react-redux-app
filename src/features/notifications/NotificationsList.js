@@ -1,10 +1,10 @@
 import classnames from "classnames";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import React, { useLayoutEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useLayoutEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { selectAllUsers } from "../users/usersSlice";
 import {
-  fetchNotifications,
+  allNotificationsRead,
   selectAllNotifications,
 } from "./notificationsSlice";
 
@@ -14,7 +14,7 @@ function NotificationsList() {
   const users = useSelector(selectAllUsers);
 
   useLayoutEffect(() => {
-    dispatch(fetchNotifications());
+    dispatch(allNotificationsRead());
   });
 
   const renderedNotifications = notifications.map((notification) => {
