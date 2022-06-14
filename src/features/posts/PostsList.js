@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useGetPostsQuery } from "@features/api/apiSlice";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Spinner } from "../../components/Spinner";
 import { PostAuthor } from "../users/PostAuthor";
-import { fetchPosts, selectPostById, selectPostIds } from "./postsSlice";
 import { ReactionButtons } from "./ReactionButtons";
 import { TimeAgo } from "./TimeAgo";
 
-let PostExcerpt = ({ postId }) => {
-  const post = useSelector((state) => selectPostById(state, postId));
+let PostExcerpt = ({ post }) => {
   return (
     <article className="post-excerpt" key={post.id}>
       <h3>{post.title}</h3>
@@ -28,28 +26,30 @@ let PostExcerpt = ({ postId }) => {
 PostExcerpt = React.memo(PostExcerpt);
 
 function PostsList() {
-  const dispatch = useDispatch();
-  const orderPostsIds = useSelector(selectPostIds);
+  const {
+    data: posts = [],
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetPostsQuery();
 
-  const postStatus = useSelector((state) => state.posts.status);
-  const error = useSelector((state) => state.posts.error);
-
-  useEffect(() => {
-    if (postStatus === "idle") {
-      dispatch(fetchPosts());
-    }
-  }, [postStatus, dispatch]);
+  const sortedPosts = useMemo(() => {
+    const sortedPosts = posts.slice();
+    sortedPosts.sort((a, b) => b.date.localeCompare(a.date));
+    return sortedPosts;
+  }, [posts]);
 
   let content;
 
-  if (postStatus === "loading") {
+  if (isLoading) {
     content = <Spinner text="Loading..." />;
-  } else if (postStatus === "succeeded") {
-    content = orderPostsIds.map((postId) => (
-      <PostExcerpt key={postId} postId={postId} />
+  } else if (isSuccess) {
+    content = sortedPosts.map((post) => (
+      <PostExcerpt key={post.id} post={post} />
     ));
-  } else if (postStatus === "failed") {
-    content = <p>{error}</p>;
+  } else if (isError) {
+    content = <p>{error.toString()}</p>;
   }
 
   return (
