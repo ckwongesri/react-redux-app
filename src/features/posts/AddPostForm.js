@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewPost } from "./postsSlice";
+import { selectAllUsers } from "@features/users/usersSlice";
 
 function AddPostForm() {
   const [title, setTitle] = useState("");
@@ -12,7 +13,7 @@ function AddPostForm() {
     [title, content, userId].every(Boolean) && addRequestStatus === "idle";
 
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
+  const users = useSelector(selectAllUsers);
 
   function onTitleChanged(event) {
     setTitle(event.target.value);
