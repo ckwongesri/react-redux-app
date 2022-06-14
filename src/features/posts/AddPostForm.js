@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { nanoid } from '@reduxjs/toolkit';
-import { postAdded } from './postsSlice';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { nanoid } from "@reduxjs/toolkit";
+import { postAdded } from "./postsSlice";
 
 function AddPostForm() {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const dispatch = useDispatch();
 
@@ -27,8 +27,8 @@ function AddPostForm() {
         })
       );
 
-      setTitle('');
-      setContent('');
+      setTitle("");
+      setContent("");
     }
   }
 
