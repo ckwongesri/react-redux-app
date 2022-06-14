@@ -1,11 +1,16 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
-import { sub } from "date-fns";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { client } from "../../api/client";
 
 const initialState = {
   posts: [],
   status: "idle",
   error: null,
 };
+
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
+  const response = await client.get("/fakeApi/posts");
+  return response.data;
+});
 
 const postsSlice = createSlice({
   name: "posts",
@@ -43,6 +48,20 @@ const postsSlice = createSlice({
         existingPost.reactions[reaction]++;
       }
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchPosts.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.posts = state.posts.concat(action.payload);
+        state.status = "succeeded";
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.status = "failed";
+      });
   },
 });
 
